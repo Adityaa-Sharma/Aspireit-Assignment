@@ -7,8 +7,6 @@ tokenizer = AutoTokenizer.from_pretrained("openai-community/gpt2")
 model = AutoModelForCausalLM.from_pretrained("openai-community/gpt2")
 model1 = pipeline("sentiment-analysis")
 
-sentiment_list = []
-
 def get_state():
     return st.session_state
 
@@ -61,9 +59,19 @@ if __name__ == '__main__':
         st.subheader("Bar Graph:")
         st.bar_chart(sentiment_df["Sentiment"].value_counts())
         
+        # Count occurrences of each sentiment label
+        sentiment_counts = sentiment_df["Sentiment"].value_counts()
+        positive_count = sentiment_counts.get("POSITIVE", 0)
+        negative_count = sentiment_counts.get("NEGATIVE", 0)
+        neutral_count = sentiment_counts.get("NEUTRAL", 0)
+        
+        st.write("Number of Positive Sentiments:", positive_count)
+        st.write("Number of Negative Sentiments:", negative_count)
+        st.write("Number of Neutral Sentiments:", neutral_count)
+        
         # Plot pie chart
         fig, ax = plt.subplots()
-        ax.pie(sentiment_df["Sentiment"].value_counts(), labels=sentiment_df["Sentiment"].unique(), autopct='%1.1f%%')
+        ax.pie([positive_count, negative_count, neutral_count], labels=["Positive", "Negative", "Neutral"], autopct='%1.1f%%')
         ax.axis('equal') 
         st.subheader("Pie Chart:")
         st.pyplot(fig)
