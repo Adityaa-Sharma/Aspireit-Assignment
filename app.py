@@ -27,7 +27,7 @@ if 'sentiment_list' not in state:
 if __name__ == '__main__':
     st.sidebar.title('Chat assistant')
     st.sidebar.subheader('About')
-    st.sidebar.write('Chat assistant is a text generation chatbot based on the GPT-2 model.')
+    st.sidebar.write('Chat assistant is a text generation chatbot based on the GPT-2 model. It also do sentiment analysis on user inputs.')
     st.sidebar.write('5 stars = Highly Positive')
     st.sidebar.write('4 stars = Positive')
     st.sidebar.write('3 stars = Neutral')
