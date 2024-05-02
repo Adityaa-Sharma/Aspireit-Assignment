@@ -1,9 +1,5 @@
-torch
 streamlit
 matplotlib
 pandas
-uvicorn
 transformers
-jupyter
-datasets
 huggingface_hub
