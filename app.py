@@ -5,7 +5,7 @@ import pandas as pd
 
 tokenizer = AutoTokenizer.from_pretrained("openai-community/gpt2")
 model = AutoModelForCausalLM.from_pretrained("openai-community/gpt2")
-model1 = pipeline("sentiment-analysis",model="google-bert/bert-base-uncased")
+model1 = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment")
 
 def get_state():
     return st.session_state
@@ -28,6 +28,11 @@ if __name__ == '__main__':
     st.sidebar.title('Chat assistant')
     st.sidebar.subheader('About')
     st.sidebar.write('Chat assistant is a text generation chatbot based on the GPT-2 model.')
+    st.sidebar.write('5 stars = Highly Positive')
+    st.sidebar.write('4 stars = Positive')
+    st.sidebar.write('3 stars = Neutral')
+    st.sidebar.write('2 stars = Negative')
+    st.sidebar.write('1 star = Highly Negative')
     
     st.sidebar.subheader('How to Use')
     st.sidebar.write('Enter your message as input, then click "Run" to generate output.')
@@ -43,10 +48,13 @@ if __name__ == '__main__':
     # Perform sentiment analysis on the user input
     sentiment_result = model1(user_input)
     
-    st.write("Sentiment Analysis Result:", sentiment_result[0]['label'])
+    # Extract sentiment label from the result
+    sentiment_label = sentiment_result[0]['label']
+    
+    st.write("Sentiment Analysis Result:", sentiment_label)
     
     # Store the sentiment result
-    state.sentiment_list.append(sentiment_result[0]['label'])
+    state.sentiment_list.append(sentiment_label)
 
     result = get_output(user_input)
     if st.button('Run'): 
@@ -61,17 +69,20 @@ if __name__ == '__main__':
         
         # Count occurrences of each sentiment label
         sentiment_counts = sentiment_df["Sentiment"].value_counts()
-        positive_count = sentiment_counts.get("POSITIVE", 0)
-        negative_count = sentiment_counts.get("NEGATIVE", 0)
-        neutral_count = sentiment_counts.get("NEUTRAL", 0)
+    
         
-        st.write("Number of Positive Sentiments:", positive_count)
-        st.write("Number of Negative Sentiments:", negative_count)
-        st.write("Number of Neutral Sentiments:", neutral_count)
+        st.write("Number of Highly Positive Sentiments (5 stars):", sentiment_df["Sentiment"].str.count("5 stars").sum())
+        st.write("Number of Positive Sentiments (4 stars):", sentiment_df["Sentiment"].str.count("4 stars").sum())
+        st.write("Number of Neutral Sentiments (3 stars):", sentiment_df["Sentiment"].str.count("3 stars").sum())
+        st.write("Number of Negative Sentiments (2 stars):", sentiment_df["Sentiment"].str.count("2 stars").sum())
+        st.write("Number of Highly Negative Sentiments (1 star):", sentiment_df["Sentiment"].str.count("1 star").sum())
         
         # Plot pie chart
         fig, ax = plt.subplots()
-        ax.pie([positive_count, negative_count, neutral_count], labels=["Positive", "Negative", "Neutral"], autopct='%1.1f%%')
+        ax.pie([sentiment_df["Sentiment"].str.count("5 stars").sum(), sentiment_df["Sentiment"].str.count("4 stars").sum(),
+                sentiment_df["Sentiment"].str.count("3 stars").sum(), sentiment_df["Sentiment"].str.count("2 stars").sum(),
+                sentiment_df["Sentiment"].str.count("1 star").sum()], 
+               labels=["Highly Positive", "Positive", "Neutral", "Negative", "Highly Negative"], autopct='%1.1f%%')
         ax.axis('equal') 
         st.subheader("Pie Chart:")
         st.pyplot(fig)
