@@ -1,0 +1,13 @@
+torch
+openai
+threadinga
+gradio
+langchain
+accelerate
+bitsandbytes
+uvicorn
+transformers
+matplotlib
+jupyter
+datasets
+huggingface_hub
