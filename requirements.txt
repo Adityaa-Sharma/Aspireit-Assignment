@@ -1,13 +1,9 @@
 torch
-openai
-threadinga
-gradio
-langchain
-accelerate
-bitsandbytes
+streamlit
+matplotlib
+pandas
 uvicorn
 transformers
-matplotlib
 jupyter
 datasets
 huggingface_hub
