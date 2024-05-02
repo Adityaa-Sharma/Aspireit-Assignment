@@ -12,13 +12,13 @@ sentiment_list = []
 def get_state():
     return st.session_state
 
-def get_song(line):
-    lyricist = pipeline(
+def get_output(line):
+    output = pipeline(
         "text-generation",
         model=model,
         tokenizer=tokenizer
     )
-    return lyricist(line, max_length=100, num_return_sequences=1)
+    return output(line, max_length=100, num_return_sequences=1)
 
 # Get the session state
 state = get_state()
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     # Store the sentiment result
     state.sentiment_list.append(sentiment_result[0]['label'])
 
-    result = get_song(user_input)
+    result = get_output(user_input)
     if st.button('Run'): 
         st.write(result)
     
