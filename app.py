@@ -5,7 +5,7 @@ import pandas as pd
 
 tokenizer = AutoTokenizer.from_pretrained("openai-community/gpt2")
 model = AutoModelForCausalLM.from_pretrained("openai-community/gpt2")
-model1 = pipeline("sentiment-analysis")
+model1 = pipeline("sentiment-analysis",model="google-bert/bert-base-uncased")
 
 def get_state():
     return st.session_state
